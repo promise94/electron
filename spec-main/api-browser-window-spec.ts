@@ -3380,7 +3380,7 @@ describe('BrowserWindow module', () => {
       });
     });
 
-    describe('BrowserWindow.setFullScreen(false) when HTML fullscreen', () => {
+    ifdescribe(process.platform === 'darwin')('BrowserWindow.setFullScreen(false) when HTML fullscreen', () => {
       it('exits HTML fullscreen when window leaves fullscreen', async () => {
         const w = new BrowserWindow();
         await w.loadURL('about:blank');
@@ -4076,7 +4076,7 @@ describe('BrowserWindow module', () => {
       });
     });
 
-    describe('fullscreen state with resizable set', () => {
+    ifdescribe(process.platform === 'darwin')('fullscreen state with resizable set', () => {
       it('resizable flag should be set to true and restored', async () => {
         const w = new BrowserWindow({ resizable: false });
         const enterFullScreen = emittedOnce(w, 'enter-full-screen');
@@ -4092,7 +4092,7 @@ describe('BrowserWindow module', () => {
       });
     });
 
-    describe('fullscreen state', () => {
+    ifdescribe(process.platform === 'darwin')('fullscreen state', () => {
       it('should not cause a crash if called when exiting fullscreen', async () => {
         const w = new BrowserWindow();
 

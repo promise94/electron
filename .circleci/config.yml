@@ -462,7 +462,7 @@ step-install-signing-cert-on-mac: &step-install-signing-cert-on-mac
   run:
     name: Import and trust self-signed codesigning cert on MacOS
     command: |
-      if  [ "$TARGET_ARCH" != "arm64" ] &&[ "`uname`" == "Darwin" ]; then
+      if  [ "`uname`" == "Darwin" ]; then
         cd src/electron
         ./script/codesign/generate-identity.sh
       fi
@@ -471,7 +471,7 @@ step-install-gnutar-on-mac: &step-install-gnutar-on-mac
   run:
     name: Install gnu-tar on macos
     command: |
-      if  [ "`uname`" == "Darwin" ]; then
+      if [ "`uname`" == "Darwin" ]; then
         if [ ! -d /usr/local/Cellar/gnu-tar/ ]; then
           brew update
           brew install gnu-tar
@@ -744,8 +744,6 @@ step-verify-mksnapshot: &step-verify-mksnapshot
         python electron/script/verify-mksnapshot.py --source-root "$PWD" --build-dir out/Default
       fi
 
-      
-
 step-verify-chromedriver: &step-verify-chromedriver
   run:
     name: Verify ChromeDriver
@@ -847,7 +845,7 @@ step-maybe-cross-arch-snapshot: &step-maybe-cross-arch-snapshot
   run:
     name: Generate cross arch snapshot (arm/arm64)
     command: |
-      if [ "$TRIGGER_ARM_TEST" == "true" ] && [ -z "$CIRCLE_PR_NUMBER" ]; then
+      if [ "$GENERATE_CROSS_ARCH_SNAPSHOT" == "true" ] && [ -z "$CIRCLE_PR_NUMBER" ]; then
         cd src
         if [ "$TARGET_ARCH" == "arm" ]; then
           export MKSNAPSHOT_PATH="clang_x86_v8_arm"
@@ -1918,6 +1916,7 @@ jobs:
       <<: *env-testing-build
       <<: *env-ninja-status
       TRIGGER_ARM_TEST: true
+      GENERATE_CROSS_ARCH_SNAPSHOT: true
       GCLIENT_EXTRA_ARGS: '--custom-var=checkout_arm=True --custom-var=checkout_arm64=True'
     steps:
       - electron-build:
@@ -1976,6 +1975,7 @@ jobs:
       <<: *env-testing-build
       <<: *env-ninja-status
       TRIGGER_ARM_TEST: true
+      GENERATE_CROSS_ARCH_SNAPSHOT: true
       GCLIENT_EXTRA_ARGS: '--custom-var=checkout_arm=True --custom-var=checkout_arm64=True'
     steps:
       - electron-build:
@@ -2127,6 +2127,7 @@ jobs:
       <<: *env-macos-build
       <<: *env-apple-silicon
       GCLIENT_EXTRA_ARGS: '--custom-var=checkout_mac=True --custom-var=host_os=mac'
+      GENERATE_CROSS_ARCH_SNAPSHOT: true
     steps:
       - electron-build:
           persist: true
@@ -2233,6 +2234,7 @@ jobs:
       <<: *env-macos-build
       <<: *env-mas-apple-silicon
       GCLIENT_EXTRA_ARGS: '--custom-var=checkout_mac=True --custom-var=host_os=mac'
+      GENERATE_CROSS_ARCH_SNAPSHOT: true
     steps:
       - electron-build:
           persist: true

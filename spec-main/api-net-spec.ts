@@ -1480,7 +1480,6 @@ describe('net module', () => {
         request.destroy();
         response.end();
       });
-      console.log(`About to call serverURL: ${serverUrl}`);
       const urlRequest = net.request(serverUrl);
       urlRequest.end(randomBuffer(kOneMegaByte));
       const [error] = await emittedOnce(urlRequest, 'error');
