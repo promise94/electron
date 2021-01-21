@@ -34,7 +34,7 @@ function getCachedRemoteObject (id: number) {
   }
 }
 function setCachedRemoteObject (id: number, value: any) {
-  const wr = new (window as any).WeakRef(value);
+  const wr = new WeakRef(value);
   remoteObjectCache.set(id, wr);
   finalizationRegistry.register(value, id);
   return value;
